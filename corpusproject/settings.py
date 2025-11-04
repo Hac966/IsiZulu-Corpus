@@ -136,3 +136,12 @@ LOGIN_URL = '/login/' #added by me
 
 AUTH_USER_MODEL = 'corpusapp.UserInfo' #added by me
 CSRF_COOKIE_SECURE = False
+
+import platform
+if platform.system() == 'Windows':
+    # Import packages needed only on Windows here
+    try:
+        import pyttsx3
+    except ImportError:
+        # Handle the case where the package isn't installed
+        pyttsx3 = None
