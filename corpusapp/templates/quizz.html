@@ -1,0 +1,122 @@
+{% extends 'home.html' %}
+
+{% block title %} IsiZulu Quiz {% endblock title %}
+
+{% block style %}
+<style>
+
+    #score-display {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-weight: bold;
+        width: 10%;
+        color: black;
+
+    }
+
+
+        #quiz-running {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: auto;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+        #quiz-area {
+            margin-top: 20px;
+            font-size: 18px;
+            color: black;
+        }
+        #iinput[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 60%;
+            margin-right: 10px;
+        }
+        .qButtons {
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .qButtons:hover {
+            background-color: black;
+        }
+        #addQuestionButton{
+            position: absolute;
+            top: 2em;
+            left: 2em;
+            height: 2em;
+            width: 2em;
+            border-radius: 0.5em;
+            }
+    #qheading{
+        text-shadow: 2px 2px 5px grey;
+
+    }
+
+
+
+
+</style>
+{% endblock style %}
+
+
+{% block theCore %}
+
+<div id="quiz-running">
+    <h2 style="color: black" id="qheading">IsiZulu Knowledge Quiz</h2>
+    <a href="/addQuestion/"><button id="addQuestionButton" title="add your own question">+</button></a>
+
+    {% if not quiz_finished %}
+    <div id="score-display">
+        Score: {{ score }} / {{ max_questions }}
+    </div>
+    {% endif %}
+
+    <div id="quiz-area">
+
+        {% if quiz_finished %}
+            <div id="final-results">
+                <h2>Quiz Finished! 🎉</h2>
+                <p>Your final score is: {{ final_score }} out of {{ max_score }}</p>
+                <form method="get" action="?reset=true">
+    <button type="submit" class="qButtons">Start New Quiz</button>
+</form>
+            </div>
+
+        {% else %}
+            <h4>Question {{ current_question_number }} of {{ max_questions }}</h4>
+            <pre>{{ question }}</pre>
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" placeholder="Enter your answer" id="iinput" name="userAnswer" required>
+                <button type="submit" class="qButtons">Check</button>
+            </form>
+
+        {% endif %}
+
+        {% if messages %}
+            <ul class="messages" style="list-style: none; padding: 0;">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock theCore %}

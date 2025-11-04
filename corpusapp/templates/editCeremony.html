@@ -1,0 +1,124 @@
+{% extends 'home.html' %}
+{% load static %}
+
+{% block title %} cuisine {% endblock title %}
+{% block style %}
+<style>
+
+    #hr{
+    border-bottom: 3px solid black;
+    }
+
+    label{
+    color: black;
+    font-size: 2em;
+    }
+    #ceremonyForm{
+    background-color: lightgray;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: auto;
+    }
+    #extractForCeremony{
+    width: 100%;
+        border-radius: 0.5em;
+        height: 2.5em;
+  
+    }
+    #imageForCeremony{
+    margin-top: 10px;
+    background-color: grey;
+    color: white;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+  
+    }
+    #imageForCeremony:hover{
+    background-color: black;
+    }
+    .button{
+    background-color: grey;
+    color: white;
+    font-size: 1.5em;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    }
+    .button:hover{
+    background-color: black;
+    }
+    #fileForCeremony{
+    margin-top: 10px;
+    background-color: grey;
+    color: white;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    }
+    #fileForCeremony:hover{
+    background-color: black;
+    }
+
+    #ceremonyForm{
+        width: 100%;
+        border-radius: 0.5em;
+        height: 2.5em;
+    }
+    
+</style>
+
+
+{% endblock style %}
+
+{% block theCore %}
+<div id="hr">
+    <h2 style="color: black">Edit Your Ceremony</h2>
+</div>
+
+<div>
+    <form id="ceremonyForm" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="headingForCeremony" >Heading: </label>
+        <input type="text" id="headingForCeremony" name="headingForCeremony" value="{{ceremony.heading}}" required><br><br>
+
+        <label for="extractForCeremony" >Small Extract: </label>
+        <textarea id="extractForCeremony" name="extractForCeremony" required>{{ceremony.exact}}</textarea>
+
+        <label for="imageForCeremony">Picture:</label>
+        <input type="file" id="imageForCeremony" name="imageForCeremony" accept="image/*" value="{{ceremony.picture}}" required><br><br>
+
+        <label for="learnMore">Learn More:</label>
+        <input type="url" id="learnMore" name="learnMore" value="{{ceremony.learnMore}}"> <p style="display: inline-block;">or</p> <input type="file" name="fileForCeremony" id="fileForCeremony" accept=".txt, text/plain, .pdf, application/pdf" value="{{ceremony.file}}"> <br><br>
+
+        <button type="submit" class="button">UPDATE</button>
+    </form>
+</div>
+
+{% endblock theCore %}
+
+{% block script %}
+<script src="{% static 'script.js' %}">
+  const form = document.getElementById('ceremonyForm');
+  const learnMore = document.getElementById('learnMore');
+  const file = document.getElementById('fileForCuisine');
+
+  form.addEventListener('submit', function(event) {
+    if (learnMore.value && file.files.length > 0) {
+      alert("Please provide either text OR a file, not both.");
+      event.preventDefault();
+    } else if (!learnMore.value && file.files.length === 0) {
+      alert("Please provide either text OR a file.");
+      event.preventDefault();
+    }
+  });
+</script>
+{% endblock script %}

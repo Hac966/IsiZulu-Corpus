@@ -1,0 +1,52 @@
+// @version=6
+strategy("Gold Triple MA Cross Strategy (MT5 Specs)", 
+         overlay=true, 
+         initial_capital=10000, 
+         default_qty_value=1, // Example: Allocates 1% of total equity for each trade
+         default_qty_type=strategy.percent_of_equity)
+
+// 1. Calculate the base (unshifted) Simple Moving Averages based on 'Close' price
+purple_ma_base = ta.sma(close, 11)
+red_ma_base = ta.sma(close, 76)
+black_ma_base = ta.sma(close, 100)
+
+// 2. Apply the specified shifts to the MAs for use in the strategy logic.
+// A positive 'shift' (like in MT5) means we use the MA value from 'shift' bars ago, 
+// effectively plotting the current MA value 'shift' bars to the right.
+purple_ma = purple_ma_base      // Purple MA: Shift is 0
+red_ma = red_ma_base[19]        // Red MA: Shift is 19
+black_ma = black_ma_base[100]   // Black MA: Shift is 100
+
+// 3. Define Signals
+// Buy Signal: Purple MA crosses OVER Red MA
+buy_signal = ta.crossover(purple_ma, red_ma)
+
+// Sell Signal: Purple MA crosses UNDER Red MA
+sell_signal = ta.crossunder(purple_ma, red_ma)
+
+// Exit Signal: Any of the moving averages bisects (crosses) with Black MA
+// For consistency (to avoid potential compiler warnings for ta.cross() in conditionals),
+// we assign the cross results to variables first.
+bool purple_cross_black = ta.cross(purple_ma, black_ma)
+bool red_cross_black = ta.cross(red_ma, black_ma)
+exit_signal = purple_cross_black or red_cross_black
+
+// 4. Strategy Entry and Exit Logic
+if (buy_signal)
+    strategy.entry("Buy", strategy.long)
+
+if (sell_signal)
+    strategy.entry("Sell", strategy.short)
+
+if (exit_signal)
+    strategy.close_all(comment = "EXIT") // Close any open positions (long or short)
+
+// 5. Plot the shifted Moving Averages on the chart for visual confirmation
+plot(purple_ma, color=color.purple, title="Purple MA (Shift 0)", linewidth=2)
+plot(red_ma, color=color.red, title="Red MA (Shift 19)", linewidth=2)
+plot(black_ma, color=color.black, title="Black MA (Shift 100)", linewidth=3)
+
+// 6. Plot shapes on the chart to indicate signals visually
+plotshape(buy_signal, title='Buy Signal', style=shape.labelup, color=color.green, text="BUY", textcolor=color.white, size=size.normal)
+plotshape(sell_signal, title='Sell Signal', style=shape.labeldown, color=color.red, text="SELL", textcolor=color.white, size=size.normal)
+plotshape(exit_signal, title='Exit Signal', style=shape.circle, color=color.yellow, text="EXIT", textcolor=color.black, size=size.small)

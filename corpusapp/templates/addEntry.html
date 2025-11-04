@@ -1,0 +1,39 @@
+{% extends 'home.html' %}
+
+{% block title %} search_entry {% endblock title %}
+
+{% block theCore %}
+
+<div id="adding-entry">
+    <h2 style="color: Yellow;">Add New Corpus Entry</h2>
+    <div id="form-core">
+        <form id="form-for-entry" method="post">
+            {% csrf_token %}
+            <label for="zulu-phrases">Zulu phrases</label>
+            <input id="zulu-phrases" type="text" name="zulu-phrase" required><br><br>
+            <label for="english-translation">Translation</label>
+            <input id="english-translation" type="text" name="english-translation" required><br><br>
+
+            <label for="isixhosa-translation">IsiXhosa Translation (Optional)</label>
+            <input id="isixhosa-translation" type="text" name="isixhosa-translation"><br><br>
+            <label for="isipedi-translation">Isipedi Translation (Optional)</label>
+            <input id="isipedi-translation" type="text" name="isipedi-translation" ><br><br>
+
+            <label for="extract">Extract</label>
+            <textarea id="extract" rows="3" name="extract" required></textarea><br><br>
+            <label for="word-usage">Word usage</label>
+            <textarea id="word-usage" rows="3" name="word-usage" required></textarea><br><br>
+            <label for="commonly">Commonly paired words</label>
+            <textarea id="commonly" rows="3" name="commonly" required></textarea><br><br>
+
+            <label for="learnMore">Include a link(Optional)</label>
+            <input type="url" id="learnMore" name="learnMore"><br><br>
+
+            <button id="entry-submit-button" type="submit">Submit</button>
+
+        </form>
+    </div>
+
+</div>
+
+{% endblock theCore %}

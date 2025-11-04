@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Approval</title>
+
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+        }
+        .entry {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .entry h2 {
+            margin-top: 0;
+            color: #555;
+        }
+        .entry p {
+            margin: 5px 0;
+        }
+        .entry .user-info {
+            font-style: italic;
+            color: #777;
+        }
+        .entry form {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .entry button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .approve-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .disapprove-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        .delete-btn {
+            background-color: #ccc;
+            color: #333;
+        }
+        .no-entries {
+            text-align: center;
+            font-size: 1.2em;
+            color: #888;
+        }
+
+            .a2{
+        text-decoration: none;
+        height: 1.3em
+        position: absolute;
+        top: 0.3em;
+        right: 0.3em;
+        }
+
+
+
+    .hc{
+        margin-top: -3.4em;
+        margin-right: 0.4em;
+        display: flex;
+        justify-content: flex-end;
+        }
+
+
+
+.cover2 {
+
+    transition: transform 0.3s ease;
+    transform: scale(1);
+}
+.cover2:hover{
+    transform: scale(1.01);
+    }
+
+        img {
+            height: 19em;
+            width: 100%;
+            border-radius: 0.7em;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Admin Approval</h1>
+
+    {% if pending_attires %}
+        {% for attire in pending_attires %}
+            <div class="entry">
+                        <div>
+                            <img src="{{attire.picture.url}}" alt="no image" />
+                            <div>
+                                <h3>{{attire.heading}}</h3>
+                                <p>{{attire.extract}}</p>
+                                {% if attire.file %}
+                                    <a href="{{attire.file.url}}" class="a">Learn More</a>
+                                {% else %}
+                                    <a href="{{attire.learnMore}}" class="a">Learn More</a>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="attire_id" value="{{ attire.id }}">
+                    <button type="submit" name="action" value="approve" class="approve-btn">Approve</button>
+                    <button type="submit" name="action" value="disapprove" class="disapprove-btn">Disapprove</button>
+                    <button type="submit" name="action" value="delete" class="delete-btn">Delete</button>
+                </form>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-entries">No new attires pending approval.</p>
+    {% endif %}
+</div>
+
+</body>
+</html>

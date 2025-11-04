@@ -1,0 +1,74 @@
+<h1>Edit Your Entry</h1>
+<style>
+    #hr{
+    border-bottom: 3px solid black;
+    }
+ 
+    label{
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+    }
+ 
+    input[type="text"], textarea{
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    }
+ 
+    .button{
+    background-color: grey;
+    color: white;
+    font-size: 1.5em;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 15px;
+    }
+ 
+    .button:hover{
+    background-color: black;
+    }
+ 
+    form{
+    background-color: lightgrey;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    margin: auto;
+    }
+    
+</style>
+<form method="post">
+    {% csrf_token %}
+
+    <label for="zulu-phrase">IsiZulu Phrase:</label>
+    <input type="text" name="zulu-phrase" value="{{ entry.isizulu }}">
+
+    <label for="english-translation">English Translation:</label>
+    <input type="text" name="english-translation" value="{{ entry.english }}">
+
+    <label for="extract">Extract:</label>
+    <textarea name="extract">{{ entry.extract }}</textarea>
+
+    <label for="isixhosa-translation">IsiXhosa Translation (Optional)</label>
+            <input id="isixhosa-translation" type="text" name="isixhosa-translation" value="{{entry.isizulu}}">
+            <label for="isipedi-translation">Isipedi Translation (Optional)</label>
+            <input id="isipedi-translation" type="text" name="isipedi-translation" value="{{entry.isipedi}}">
+
+    <label for="word-usage">Word Usage:</label>
+    <textarea name="word-usage">{{ entry.word_usage }}</textarea>
+
+    <label for="commonly">Commonly paired words</label>
+    <textarea id="commonly" rows="3" name="commonly" required>{{entry.commonly}}</textarea>
+
+    <label for="learnMore">Learn More:</label>
+    <textarea name="learnMore">{{ entry.learn_more }}</textarea>
+
+    <button type="submit">Update Entry</button>
+</form>

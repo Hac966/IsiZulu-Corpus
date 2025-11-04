@@ -1,0 +1,195 @@
+{% extends 'home.html' %}
+{% load static %}
+
+{% block title %} ceremonies {% endblock title %}
+
+{% block theCore %}
+
+
+    <div id="for-cuisine" >
+        <h2 style="color: black;">Ceremonies</h2> <div class="hc"><a href="/addCeremony/" class="a2" title="click here to add a ceremony">+</a></div>
+<div class="category-view">
+        <div class="allCategories">
+      {% for cuisine in ceremonies %}
+
+                <div class="cover1">
+
+                        <div>
+                            <a href="{{cuisine.picture.url}}" title="click to view full picture"><img src="{{cuisine.picture.url}}" alt="no image" /></a>
+                            <div class="content">
+                                <h3>{{cuisine.heading}}</h3>
+                                <p>{{cuisine.extract}}</p>
+                                {% if cuisine.file %}
+                                    <a href="{{cuisine.file.url}}" class="a">Learn More</a>
+                                {% else %}
+                                    <a href="{{cuisine.learnMore}}" class="a">Learn More</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                </div>
+
+      {% endfor %}
+        </div>
+    </div>
+
+</div>
+<button id="load-more-btn1">Load More</button>
+
+{% endblock theCore %}
+
+{% block style %}
+<style>
+    .a2{
+        text-decoration: none;
+        height: 1.3em
+        position: absolute;
+        top: 0.3em;
+        right: 1em;
+        font-size: 2em;
+        color: black;
+        }
+
+
+
+    .hc{
+        margin-top: -3.4em;
+        margin-right: 0.4em;
+        display: flex;
+        justify-content: flex-end;
+        }
+
+
+
+.cover1 {
+    display: none;
+
+    transition: transform 0.3s ease;
+    transform: scale(1);
+    width: 27em;
+    flex-grow: 1;
+
+}
+
+.cover1:hover{
+    transform: scale(1.01);
+    }
+
+.cover1:nth-child(-n+8) {
+    display: inline;
+}
+
+.allCategories{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+
+    gap: 1.5em;
+    margin-top: 1em;
+
+
+    }
+
+    img{
+        width: 100%;
+        border-radius: 0.75rem 0.75rem 0 0;
+    }
+
+    .category-view{
+    margin-top: -1.3em;}
+.category-view h2 {
+    font-size: 1.875rem;
+    font-weight: bold;
+    color: #60A5FA;
+    margin-bottom: 1.5rem;
+    display: relative;
+
+
+}
+
+.category-view > div > div {
+    display: grid;
+    gap: 1.2rem;
+}
+
+.category-view > div > div > div {
+    background-color: #1F2937;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border: 1px solid #374151;
+    overflow-wrap: break-word;
+    margin-top: 1.4em;
+    transition: transform 0.3s;
+    height: 100%;
+}
+
+.category-view > div > div > div:hover {
+    transform: scale(1.05);
+}
+.category-view > div > div > div > div{
+    margin-top: -1.1em;}
+.category-view img {
+    width: 100%;
+    height: 12rem;
+    object-fit: cover;
+}
+
+.category-view .p-6 {
+    padding: 1.2rem;
+}
+
+.category-view h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #4ade80;
+
+}
+
+.category-view p {
+    color: #9ca3af;
+
+
+}
+
+
+</style>
+{% endblock style %}
+
+{% block script %}
+<script src="{% static 'script.js' %}"></script>
+{# ADDED: New script block for the Load More functionality #}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const cuisineItems = document.querySelectorAll('.cover1');
+    const loadMoreBtn = document.getElementById('load-more-btn1');
+    const itemsToShow = 8;
+    let currentlyShown = itemsToShow;
+
+    // Initially hide all items that shouldn't be visible (starting from index 8)
+    for (let i = itemsToShow; i < cuisineItems.length; i++) {
+        cuisineItems[i].style.display = 'none';
+    }
+
+    loadMoreBtn.addEventListener('click', () => {
+        let itemsLoaded = 0;
+        for (let i = currentlyShown; i < cuisineItems.length && itemsLoaded < itemsToShow; i++) {
+            if (cuisineItems[i]) {
+                cuisineItems[i].style.display = 'inline'; // Use 'inline' or 'flex' based on .cover1 CSS
+                itemsLoaded++;
+            }
+        }
+        currentlyShown += itemsLoaded;
+
+        // Hide the button if all items are shown
+        if (currentlyShown >= cuisineItems.length) {
+            loadMoreBtn.style.display = 'none';
+        }
+    });
+
+    // Initial check to hide the button if less than 8 items exist
+    if (cuisineItems.length <= itemsToShow) {
+        loadMoreBtn.style.display = 'none';
+    }
+});
+</script>
+{% endblock script %}

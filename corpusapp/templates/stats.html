@@ -1,0 +1,285 @@
+{% extends 'home.html' %}
+{% load humanize %}
+
+{% block title %} stats {% endblock title %}
+{% block style %}
+<style>
+  #stats-outer-border{
+    padding: 25px;
+    border-radius: 0.5em;
+    overflow-wrap: break-word;
+    }
+
+.stats-headings{
+    color: black;
+    }
+
+li{
+    color: black;
+    }
+
+      /* Basic styling for the table */
+    .leaderboard-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    .leaderboard-table th, .leaderboard-table td {
+        border: 1px solid #4a5568;
+        padding: 12px;
+        text-align: left;
+    }
+    .leaderboard-table th {
+        background-color: #2d3748;
+        color: white;
+    }
+
+      .user-stats-card {
+        background-color: #3b82f6; /* A nice blue color */
+        padding: 15px;
+        border-radius: 8px;
+        color: white;
+        margin-bottom: 30px;
+    }
+    .stat-item {
+        margin-bottom: 5px;
+        font-size: 1.1em;
+    }
+    .highlight {
+        font-weight: 700;
+        font-size: 1.2em;
+    }
+
+        .contribution-card {
+        background-color: #f0f4f8; /* Light background */
+        border: 1px solid #e2e8f0;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+    .contribution-list {
+        list-style: none;
+        padding: 0;
+    }
+    .contribution-list li {
+        padding: 8px 0;
+        border-bottom: 1px dashed #cbd5e0;
+        display: flex;
+        justify-content: space-between;
+        font-size: 1.1em;
+    }
+    .contribution-list li:last-child {
+        border-bottom: none;
+        font-weight: 700;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 2px solid #a0aec0;
+    }
+    .count {
+        color: #38a169; /* Green color for counts */
+        font-weight: bold;
+    }
+
+
+#word-frequency {
+    background-color: #f0f4f8; /* Dark background for contrast */
+    padding: 20px;
+    border-radius: 8px;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stats-headings {
+    border-bottom: 2px solid #4a5568; /* Light separator */
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+
+#top-10 {
+    list-style-type: none; /* Remove default numbering */
+    counter-reset: top-rank; /* Initialize a custom counter */
+    padding: 0;
+}
+
+#top-10 li {
+    counter-increment: top-rank; /* Increment the custom counter */
+    display: flex; /* Use flexbox for spacing */
+    align-items: center;
+    padding: 10px 0;
+    margin: 5px 0;
+    border-bottom: 1px dashed #4a5568;
+    gap: 0.7em;
+}
+
+/* Display the custom rank number */
+#top-10 li::before {
+    content: counter(top-rank) ".";
+    font-weight: bold;
+    color: black; /* Green color for rank */
+
+    font-size: 1.1em;
+
+
+}
+
+.word-name {
+    flex-grow: 1; /* Allows the word to take up space */
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+.frequency-count {
+    font-weight: bold;
+    color: #3b82f6; /* Blue color for frequency number */
+}
+</style>
+{% endblock style %}
+{% block theCore %}
+
+<div id="stats-outer-border">
+
+  <div id="stats-folder" >
+    <div id="overview" style="margin-top: 20px; padding: 15px; color: white; border-radius: 8px;">
+  <h3 class="stats-headings" style="border-bottom: 1px solid #4a5568; padding-bottom: 5px;">Corpus Overview 📜</h3>
+  <ul id="overview-list" style="list-style: none; padding: 0;">
+    <li style="margin-bottom: 10px;">
+        Total Words (Tokens):
+        <strong style="float: right;">{{ total_words|intcomma }}</strong>
+    </li>
+    <li style="margin-bottom: 10px;">
+        Unique Words (Types):
+        <strong style="float: right;">{{ unique_words|intcomma }}</strong>
+    </li>
+    <li style="margin-bottom: 10px;">
+        Average Word Length:
+        <strong style="float: right;">{{ average_word_length }} Characters</strong>
+    </li>
+  </ul>
+</div>
+
+    <div id="word-frequency">
+      <h3 class="stats-headings">Top 10 Most Searched Entries</h3>
+
+      <ol id="top-10">
+        {% for entry in entries|slice:":10" %}
+        <li>{{entry.isizulu}} : {{entry.word_frequency}}</li>
+        {% endfor %}
+      </ol>
+    </div>
+      <br><br>
+
+
+      {% if request.user.is_authenticated and approved_counts %}
+<div class="contribution-card">
+    <h2 style="color: black">Approved Contributions by {{ request.user.username }} ✍️</h2>
+    <p>This shows your submissions that have been reviewed and approved by an admin.</p>
+
+    <ul class="contribution-list">
+        <li>
+            <span>Approved Entries (Words/Phrases):</span>
+            <span class="count">{{ approved_counts.Entries }}</span>
+        </li>
+        <li>
+            <span>Approved Ceremonies:</span>
+            <span class="count">{{ approved_counts.Ceremonies }}</span>
+        </li>
+        <li>
+            <span>Approved Attire Submissions:</span>
+            <span class="count">{{ approved_counts.Attire }}</span>
+        </li>
+        <li>
+            <span>Approved Cuisine Submissions:</span>
+            <span class="count">{{ approved_counts.Cuisine }}</span>
+        </li>
+        <li>
+            <span>Approved History Submissions:</span>
+            <span class="count">{{ approved_counts.History }}</span>
+        </li>
+        <li>
+            <span>Approved Quiz Questions:</span>
+            <span class="count">{{ approved_counts.Quizzes }}</span>
+        </li>
+        <li>
+            <span>TOTAL APPROVED CONTRIBUTIONS:</span>
+            <span class="count">{{ approved_counts.Total }}</span>
+        </li>
+    </ul>
+</div>
+{% else %}
+<div class="contribution-card">
+    <p>Please log in to view your contribution statistics.</p>
+</div>
+{% endif %}
+
+    <div id="leaderboard">
+      {% if user_stats.user_quiz_takes %}
+<div class="user-stats-card">
+    <h2>Your Quiz Stats, {{ user_stats.username }}:</h2>
+
+    <div class="stat-item">
+        Your Average Score is: <span class="highlight">{{ user_stats.user_average_score|floatformat:2 }} / 10</span>
+    </div>
+
+    <div class="stat-item">
+        Total Quizzes Taken: <span class="highlight">{{ user_stats.user_quiz_takes }}</span>
+    </div>
+
+    {% if user_stats.rank %}
+        <div class="stat-item">
+            Your Rank is: <span class="highlight">#{{ user_stats.rank }}</span>
+        </div>
+    {% else %}
+        <div class="stat-item">
+            (You currently don't meet the criteria for the top leaderboard spots.)
+        </div>
+    {% endif %}
+
+</div>
+{% elif request.user.is_authenticated %}
+<div class="user-stats-card">
+    <p>Hey,{{ request.user.username }}, you haven't taken any quizzes yet. Go test your knowledge!</p>
+</div>
+{% endif %}
+<h1>Quiz Leaderboard</h1>
+
+<table class="leaderboard-table">
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>User</th>
+            <th>Avg. Score (Out of 10)</th>
+            <th>Quizzes Taken</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in leaderboard %}
+            <tr>
+                <td style="color: black">{{ forloop.counter }}</td>
+                <td style="color: black">
+                    <strong>
+                        {% if entry.user__id == request.user.id %}
+                            {{ entry.user__username }} (You) 👈
+                        {% else %}
+                            {{ entry.user__username }}
+                        {% endif %}
+                    </strong>
+                </td>
+                <td style="color: black">{{ entry.average_score|floatformat:2 }} / 10</td>
+                <td style="color: black">{{ entry.quiz_takes }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4">No quiz scores recorded yet.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+    </div>
+  </div>
+
+</div>
+{% endblock theCore %}

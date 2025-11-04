@@ -1,0 +1,127 @@
+{% extends 'home.html' %}
+{% load static %}
+
+{% block title %} cuisine {% endblock title %}
+{% block style %}
+<style>
+
+    #hr{
+    border-bottom: 3px solid black;
+    }
+
+    label{
+    color: black;
+    font-size: 2em;
+    }
+    #historyForm{
+    background-color: lightgray;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width:100%;
+    margin: auto;
+    }
+    #imageForHistory{
+    margin-top: 10px;
+    background-color: grey;
+    color: white;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    }
+    #imageForHistory:hover{
+    background-color: black;
+    }
+    .button{
+    background-color: grey;
+    color: white;
+    font-size: 1.5em;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    }
+    .button:hover{
+    background-color: black;
+    }
+    #extractForHistory{
+    width: 100%;
+        width: 100%;
+        border-radius: 0.5em;
+        height: 2.5em;
+  
+    }
+    #fileForHistory{
+    margin-top: 10px;
+    background-color: grey;
+    color: white;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    padding: 5px ;
+    cursor: pointer;
+
+    }
+    #fileForHistory:hover{
+    background-color: black;
+    }
+
+    #historyForm input{
+        width: 100%;
+        width: 100%;
+        border-radius: 0.5em;
+        height: 2.5em;
+    }
+
+
+
+    
+</style>
+
+
+{% endblock style %}
+
+{% block theCore %}
+<div id="hr">
+    <h2 style="color: black">Add New History</h2>
+</div>
+
+<div>
+    <form id="historyForm" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="headingForHistory" >Heading: </label>
+        <input type="text" id="headingForHistory" name="headingForHistory" required><br><br>
+
+        <label for="extractForHistory" >Extract: </label>
+        <textarea id="extractForHistory" name="extractForHistory"></textarea> <p style="display: inline-block;">or</p> <input type="file" name="fileForHistory" id="fileForHistory" accept=".txt, text/plain, .pdf, application/pdf"> <br><br>
+
+        <label for="ImageForHistory">Picture:</label>
+        <input type="file" id="ImageForHistory" name="ImageForHistory" accept="image/*" required>
+
+        <button type="submit" class="button">Submit </button>
+    </form>
+</div>
+
+{% endblock theCore %}
+
+{% block script %}
+<script src="{% static 'script.js' %}"></script>
+<script>
+  const form = document.getElementById('historyForm');
+  const extract = document.getElementById('extractForHistory');
+  const file = document.getElementById('fileForHistory');
+
+  form.addEventListener('submit', function(event) {
+    if (extract.value && file.files.length > 0) {
+      alert("Please provide either text OR a file, not both.");
+      event.preventDefault();
+    } else if (!extract.value && fileInput.files.length === 0) {
+      alert("Please provide either text OR a file.");
+      event.preventDefault();
+    }
+  });
+</script>
+{% endblock script %}

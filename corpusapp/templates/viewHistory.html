@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>viewing history</title>
+</head>
+<body>
+<h1>{{ history.heading }}</h1>
+{% if fileIsPDF %}
+    <iframe src="{{ history.file.url }}" width="100%" height="600px" style="border: none;"></iframe>
+    <p>If the PDF does not display, you can <a href="{{ history.file.url }}" target="_blank">download it here</a>.</p>
+{% elif output %}
+    <pre>{{output}}</pre>
+{% else %}
+    <p>No content lol</p>
+{% endif %}
+</body>
+</html>

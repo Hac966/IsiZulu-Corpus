@@ -1,0 +1,613 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body{
+            background-color: #F0F0F0;
+
+            }
+    #profile{
+        height: 3em;
+        width: 3em;
+        border-radius: 100%;
+        border: 2px solid black;
+        position: absolute;
+        top: 0.5em;
+        right: 0.5em;
+    }
+    #mainCore{
+        display: flex;
+        justify-content: center;
+        flex-grow: 1;
+
+
+    }
+
+    .divs{
+        display: inline-block;
+        height: 20em;
+        max-height: 70em;
+        min-width: 19em;
+        max-width: 45em;
+        position: relative;
+        border-radius: 0.5em;
+        padding: 2em 0 0 0;
+        flex-grow: 1;
+
+
+
+
+    }
+
+    h2{
+        position: absolute;
+        top: -0.8em;
+        left: 0;
+        color: #3F48CC;
+
+    }
+        .inner{
+
+            height: 100%;
+            width: 100%;
+            overflow: auto;
+            border-radius: 0.7em;
+            box-shadow: 2px 2px 5px grey, -2px -2px 5px grey;
+
+            }
+        .inner::-webkit-scrollbar {
+            display: none;
+}
+
+        #core{
+            border-top: 2px solid #3F48CC;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1em;
+            padding: 0 1em;
+            border-radius: 1em;
+
+
+        }
+
+        li{
+            border: 2px solid #3F48CC;
+            background-color: #99D9EA;
+            border-radius: 0.7em;
+            padding: 1em;
+            margin: 0.4em;
+            position: relative;
+            transition: transform 0.2s ease-in;
+
+
+
+        }
+
+        li:hover{
+            transform: scale(1.01);
+            }
+
+        .status{
+            border: 2px solid grey;
+            border-radius: 1em;
+            padding: 0.4em;
+            background-color: #DBDBDB;
+            width: 8em;
+
+        }
+
+
+        .entryOptions{
+
+            display: block;
+        }
+        .allCons{
+            transition: transform 0.2s ease-in;
+            }
+
+        .allCons:hover{
+            transform: scale(2);
+            cursor: pointer;
+        }
+
+        .entryBar{
+
+            width: 5em;
+            max-width: 25em;
+            overflow: auto;
+            flex-grow: 1;
+            display: block;
+        }
+        .entryBar::-webkit-scrollbar{
+            display: none;
+            }
+
+        .entryBar:hover{
+            cursor: grab;
+            }
+
+
+        .yEntry{
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            gap: 0.5em;
+            height: 1.2em;
+        }
+        p{
+            margin-top: -0.08em;
+        }
+
+        .favorite-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px dashed #eee;
+            box-shadow: 2px 2px 4px grey;
+            margin: 0.3em;
+            transition: transform 0.2s ease-in;
+        }
+
+        .favorite-item:hover {
+            transform: scale(1.01);
+            }
+       .isizulu-link {
+            color: black;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: bold;
+    }
+    .isizulu-link:hover {
+        color: blue; /* Visual feedback on hover */
+    }
+    /* Style for the unlike button */
+    .unlike-form button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.5em;
+        color: red;
+        padding: 0;
+    }
+
+</style>
+</head>
+<body>
+<h1 style="color: #3F48CC;">My Profile</h1>
+<hr id="hr" style="color: #DED300;">
+<div id="mainCore">
+    <div id="core">
+        <div id="yourEntries" class="divs">
+            <h2>Your Entries</h2>
+            <div class="inner">
+ {% if user_entries %}
+<ol>
+    {% for entry in user_entries reversed %}
+    <li><div class="yEntry"> <div class="entryBar"><p>{{entry.isizulu}}</p></div> <div class="entryOptions">
+        {% if entry.status == "Disapproved" %}
+        <span class="status allCons" style="background-color: #FF5D60; border-color: red; padding: 0.5em 2em 0.5em 2em">{{ entry.status }}</span>
+
+        <form method="post" action="{% url 'deleteEntry' entry.id %}" style="display:inline;">
+            {% csrf_token %}
+            <span class="bin-icon allCons" title="Delete the entry"><button type="submit" style="border: none; background: none; cursor: pointer;"><i class="bi bi-trash" style="color:red;"></i></button></span>
+        </form>
+
+        <span class="eye-icon allCons" style="color: blue;" title="view the entry"><i class="bi bi-eye-slash"></i></span>
+
+        <a href="{% url 'editEntry' entry.id %}" class="pen-icon allCons" title="edit the entry"><i class="bi bi-pencil"></i></a>
+        {# RE-ADDED: Pen icon for Disapproved so user can correct it #}
+
+        </div></div> </li>
+        {% elif entry.status == "Approved" %}
+        <span class="status allCons" style="background-color: #78FFA0; border-color: green; padding: 0.5em 2.6em 0.5em 2.6em">{{ entry.status }}</span>
+
+        <form method="post" action="{% url 'deleteEntry' entry.id %}" style="display:inline;">
+            {% csrf_token %}
+            <span class="bin-icon allCons" title="Delete the entry"><button type="submit" style="border: none; background: none; cursor: pointer;"><i class="bi bi-trash" style="color:red;"></i></button></span>
+        </form>
+
+        <span class="eye-icon allCons" style="color: blue;" title="view the entry"><i class="bi bi-eye"></i></span>
+
+        {# REMOVED: Edit icon hidden for Approved (No change here) #}
+
+        </div></div> </li>
+        {% else %}
+        <span class="status allCons" style="padding: 0.5em 3em 0.5em 3em">{{ entry.status }}</span>
+
+        <form method="post" action="{% url 'deleteEntry' entry.id %}" style="display:inline;">
+            {% csrf_token %}
+            <span class="bin-icon allCons" title="Delete the entry"><button type="submit" style="border: none; background: none; cursor: pointer;"><i class="bi bi-trash" style="color:red;"></i></button></span>
+        </form>
+
+        <span class="eye-icon allCons" style="color: blue;" title="view the entry"><i class="bi bi-eye-slash"></i></span>
+
+        <a href="{% url 'editEntry' entry.id %}" class="pen-icon allCons" title="edit the entry"><i class="bi bi-pencil"></i></a>
+        {# RE-ADDED: Pen icon for Pending so user can edit before review #}
+
+        </div></div> </li>
+        {% endif %}
+    {% endfor %}
+</ol>
+ {% else %}
+    <p style="margin-top: 5em; text-align: center;">You have not created any entries yet.</p>
+ {% endif %}
+            </div>
+        </div>
+
+        <div id="" class="divs">
+            <h2>Your Quiz Questions</h2>
+            <div class="inner">
+
+                {% if user_questions %}
+                <ol>
+                {% for question in user_questions reversed %}
+                    <li><div class="yEntry"> <div class="entryBar"><p>{{question.question}}</p></div> <div class="entryOptions">
+                {% if question.status == "Disapproved" %}
+                    <span class="status allCons" style="background-color: #FF5D60; border-color: red; padding: 0.5em 2em 0.5em 2em">{{ question.status }}</span>
+
+        <form method="post" action="{% url 'deleteQuestion' question.id %}" style="display:inline;">
+            {% csrf_token %}
+            <span class="bin-icon allCons" title="Delete the question"><button type="submit" style="border: none; background: none; cursor: pointer;"><i class="bi bi-trash" style="color:red;"></i></button></span>
+        </form>
+
+        <span class="eye-icon allCons" style="color: blue;" title="view the question"><i class="bi bi-eye-slash"></i></span>
+
+        <a href="{% url 'editQuestion' question.id %}" class="pen-icon allCons" title="edit the question"><i class="bi bi-pencil"></i></a>
+        {# RE-ADDED: Pen icon for Disapproved #}
+
+        </div>
+                    </div>
+                    </li>
+        {% elif question.status == "Approved" %}
+            <span class="status allCons" style="background-color: #78FFA0; border-color: green; padding: 0.5em 2.6em 0.5em 2.6em">{{ question.status }}</span>
+
+        <form method="post" action="{% url 'deleteQuestion' question.id %}" style="display:inline;">
+            {% csrf_token %}
+            <span class="bin-icon allCons" title="Delete the question"><button type="submit" style="border: none; background: none; cursor: pointer;"><i class="bi bi-trash" style="color:red;"></i></button></span>
+        </form>
+
+        <span class="eye-icon allCons" style="color: blue;" title="view the question"><i class="bi bi-eye"></i></span>
+
+        {# REMOVED: Edit icon hidden for Approved (No change here) #}
+
+        </div></div> </li>
+        {% else %}
+        <span class="status allCons" style="padding: 0.5em 3em 0.5em 3em">{{ question.status }}</span>
+
+        <form method="post" action="{% url 'deleteQuestion' question.id %}" style="display:inline;">
+            {% csrf_token %}
+            <span class="bin-icon allCons" title="Delete the question"><button type="submit" style="border: none; background: none; cursor: pointer;"><i class="bi bi-trash" style="color:red;"></i></button></span>
+        </form>
+
+        <span class="eye-icon allCons" style="color: blue;" title="view the entry"><i class="bi bi-eye-slash"></i></span>
+
+        <a href="{% url 'editQuestion' question.id %}" class="pen-icon allCons" title="edit the entry"><i class="bi bi-pencil"></i></a>
+        {# RE-ADDED: Pen icon for Pending #}
+
+        </div>
+</div>
+</li>
+        {% endif %}
+    {% endfor %}
+</ol>
+ {% else %}
+    <p style="margin-top: 5em; text-align: center;">You have not created any questions yet.</p>
+ {% endif %}
+            </div>
+
+        </div>
+         <div id="" class="divs">
+            <h2>Your Ceremonies</h2>
+            <div class="inner">
+
+                {% if user_ceremonies %}
+                <ol>
+                {% for ceremony in user_ceremonies reversed %}
+                    <li><div class="yEntry"> <div class="entryBar"><p>{{ceremony.heading}}</p></div> <div class="entryOptions">
+                {% if ceremony.status == "Disapproved" %}
+                    <span class="status allCons" style="background-color: #FF5D60; border-color: red; padding: 0.5em 2em 0.5em 2em">{{ ceremony.status }}</span>
+
+        <form method="post" action="{% url 'deleteCeremony' ceremony.id %}" style="display:inline;">
+            {% csrf_token %}
+            <span class="bin-icon allCons" title="Delete the question"><button type="submit" style="border: none; background: none; cursor: pointer;"><i class="bi bi-trash" style="color:red;"></i></button></span>
+        </form>
+
+        <span class="eye-icon allCons" style="color: blue;" title="view the question"><i class="bi bi-eye-slash"></i></span
+
+        <a href="{% url 'editCeremony' ceremony.id %}" class="pen-icon allCons" title="edit the question"><i class="bi bi-pencil"></i></a>
+        {# RE-ADDED: Pen icon for Disapproved #}
+
+        </div>
+                    </div>
+                    </li>
+        {% elif ceremony.status == "Approved" %}
+            <span class="status allCons" style="background-color: #78FFA0; border-color: green; padding: 0.5em 2.6em 0.5em 2.6em">{{ ceremony.status }}</span>
+
+        <form method="post" action="{% url 'deleteCeremony' ceremony.id %}" style="display:inline;">
+            {% csrf_token %}
+            <span class="bin-icon allCons" title="Delete the ceremony"><button type="submit" style="border: none; background: none; cursor: pointer;"><i class="bi bi-trash" style="color:red;"></i></button></span>
+        </form>
+
+        <span class="eye-icon allCons" style="color: blue;" title="view the ceremony"><i class="bi bi-eye"></i></span>
+
+        {# REMOVED: Edit icon hidden for Approved (No change here) #}
+
+        </div></div> </li>
+        {% else %}
+        <span class="status allCons" style="padding: 0.5em 3em 0.5em 3em">{{ ceremony.status }}</span>
+
+        <form method="post" action="{% url 'deleteCeremony' ceremony.id %}" style="display:inline;">
+            {% csrf_token %}
+            <span class="bin-icon allCons" title="Delete the ceremony"><button type="submit" style="border: none; background: none; cursor: pointer;"><i class="bi bi-trash" style="color:red;"></i></button></span>
+        </form>
+
+        <span class="eye-icon allCons" style="color: blue;" title="view the ceremony"><i class="bi bi-eye-slash"></i></span>
+
+        <a href="{% url 'editCeremony' ceremony.id %}" class="pen-icon allCons" title="edit the entry"><i class="bi bi-pencil"></i></a>
+        {# RE-ADDED: Pen icon for Pending #}
+
+        </div>
+</div>
+</li>
+        {% endif %}
+    {% endfor %}
+</ol>
+ {% else %}
+    <p style="margin-top: 5em; text-align: center;">You have not added any ceremonies yet.</p>
+ {% endif %}
+            </div>
+
+        </div>
+
+        <div id="" class="divs">
+            <h2>Your cuisines</h2>
+            <div class="inner">
+
+                {% if user_cuisines %}
+                <ol>
+                {% for cuisine in user_cuisines reversed %}
+                    <li><div class="yEntry"> <div class="entryBar"><p>{{cuisine.heading}}</p></div> <div class="entryOptions">
+                {% if cuisine.status == "Disapproved" %}
+                    <span class="status allCons" style="background-color: #FF5D60; border-color: red; padding: 0.5em 2em 0.5em 2em">{{ cuisine.status }}</span>
+
+        <form method="post" action="{% url 'deleteCuisine' cuisine.id %}" style="display:inline;">
+            {% csrf_token %}
+            <span class="bin-icon allCons" title="Delete the cuisine"><button type="submit" style="border: none; background: none; cursor: pointer;"><i class="bi bi-trash" style="color:red;"></i></button></span>
+        </form>
+
+        <span class="eye-icon allCons" style="color: blue;" title="view the cuisine"><i class="bi bi-eye-slash"></i></span>
+
+        <a href="{% url 'editCuisine' cuisine.id %}" class="pen-icon allCons" title="edit the cuisine"><i class="bi bi-pencil"></i></a>
+        {# RE-ADDED: Pen icon for Disapproved #}
+
+        </div>
+                    </div>
+                    </li>
+        {% elif cuisine.status == "Approved" %}
+            <span class="status allCons" style="background-color: #78FFA0; border-color: green; padding: 0.5em 2.6em 0.5em 2.6em">{{ cuisine.status }}</span>
+
+        <form method="post" action="{% url 'deleteCuisine' cuisine.id %}" style="display:inline;">
+            {% csrf_token %}
+            <span class="bin-icon allCons" title="Delete the cuisine"><button type="submit" style="border: none; background: none; cursor: pointer;"><i class="bi bi-trash" style="color:red;"></i></button></span>
+        </form>
+
+        <span class="eye-icon allCons" style="color: blue;" title="view the cuisine"><i class="bi bi-eye"></i></span>
+
+        {# REMOVED: Edit icon hidden for Approved (No change here) #}
+
+        </div></div> </li>
+        {% else %}
+        <span class="status allCons" style="padding: 0.5em 3em 0.5em 3em">{{ cuisine.status }}</span>
+
+        <form method="post" action="{% url 'deleteCuisine' cuisine.id %}" style="display:inline;">
+            {% csrf_token %}
+            <span class="bin-icon allCons" title="Delete the cuisine"><button type="submit" style="border: none; background: none; cursor: pointer;"><i class="bi bi-trash" style="color:red;"></i></button></span>
+        </form>
+
+        <span class="eye-icon allCons" style="color: blue;" title="view the cuisine"><i class="bi bi-eye-slash"></i></span>
+
+        <a href="{% url 'editCuisine' cuisine.id %}" class="pen-icon allCons" title="edit the cuisine"><i class="bi bi-pencil"></i></a>
+        {# RE-ADDED: Pen icon for Pending #}
+
+        </div>
+</div>
+</li>
+        {% endif %}
+    {% endfor %}
+</ol>
+ {% else %}
+    <p style="margin-top: 5em; text-align: center;">You have not added any cuisines yet.</p>
+ {% endif %}
+            </div>
+
+        </div>
+
+        <div id="" class="divs">
+            <h2>Your Attires</h2>
+            <div class="inner">
+
+                {% if user_attires %}
+                <ol>
+                {% for attire in user_attires reversed %}
+                    <li><div class="yEntry"> <div class="entryBar"><p>{{attire.heading}}</p></div> <div class="entryOptions">
+                {% if attire.status == "Disapproved" %}
+                    <span class="status allCons" style="background-color: #FF5D60; border-color: red; padding: 0.5em 2em 0.5em 2em">{{ attire.status }}</span>
+
+        <form method="post" action="{% url 'deleteAttire' attire.id %}" style="display:inline;">
+            {% csrf_token %}
+            <span class="bin-icon allCons" title="Delete the attire"><button type="submit" style="border: none; background: none; cursor: pointer;"><i class="bi bi-trash" style="color:red;"></i></button></span>
+        </form>
+
+        <span class="eye-icon allCons" style="color: blue;" title="view the attire"><i class="bi bi-eye-slash"></i></span>
+
+        <a href="{% url 'editAttire' attire.id %}" class="pen-icon allCons" title="edit the attire"><i class="bi bi-pencil"></i></a>
+        {# RE-ADDED: Pen icon for Disapproved #}
+
+        </div>
+                    </div>
+                    </li>
+        {% elif attire.status == "Approved" %}
+            <span class="status allCons" style="background-color: #78FFA0; border-color: green; padding: 0.5em 2.6em 0.5em 2.6em">{{ attire.status }}</span>
+
+        <form method="post" action="{% url 'deleteAttire' attire.id %}" style="display:inline;">
+            {% csrf_token %}
+            <span class="bin-icon allCons" title="Delete the attire"><button type="submit" style="border: none; background: none; cursor: pointer;"><i class="bi bi-trash" style="color:red;"></i></button></span>
+        </form>
+
+        <span class="eye-icon allCons" style="color: blue;" title="view the attire"><i class="bi bi-eye"></i></span>
+
+        {# REMOVED: Edit icon hidden for Approved (No change here) #}
+
+        </div></div> </li>
+        {% else %}
+        <span class="status allCons" style="padding: 0.5em 3em 0.5em 3em">{{ attire.status }}</span>
+
+        <form method="post" action="{% url 'deleteAttire' attire.id %}" style="display:inline;">
+            {% csrf_token %}
+            <span class="bin-icon allCons" title="Delete the attire"><button type="submit" style="border: none; background: none; cursor: pointer;"><i class="bi bi-trash" style="color:red;"></i></button></span>
+        </form>
+
+        <span class="eye-icon allCons" style="color: blue;" title="view the attire"><i class="bi bi-eye-slash"></i></span>
+
+        <a href="{% url 'editAttire' attire.id %}" class="pen-icon allCons" title="edit the attire"><i class="bi bi-pencil"></i></a>
+        {# RE-ADDED: Pen icon for Pending #}
+
+        </div>
+</div>
+</li>
+        {% endif %}
+    {% endfor %}
+</ol>
+ {% else %}
+    <p style="margin-top: 5em; text-align: center;">You have not added any attires yet.</p>
+ {% endif %}
+            </div>
+
+        </div>
+
+        <div id="" class="divs">
+            <h2>Your Histories</h2>
+            <div class="inner">
+
+                {% if user_histories %}
+                <ol>
+                {% for history in user_histories reversed %}
+                    <li><div class="yEntry"> <div class="entryBar"><p>{{history.heading}}</p></div> <div class="entryOptions">
+                {% if history.status == "Disapproved" %}
+                    <span class="status allCons" style="background-color: #FF5D60; border-color: red; padding: 0.5em 2em 0.5em 2em">{{ history.status }}</span>
+
+        <form method="post" action="{% url 'deleteHistory' history.id %}" style="display:inline;">
+            {% csrf_token %}
+            <span class="bin-icon allCons" title="Delete the history"><button type="submit" style="border: none; background: none; cursor: pointer;"><i class="bi bi-trash" style="color:red;"></i></button></span>
+        </form>
+
+        <span class="eye-icon allCons" style="color: blue;" title="view the history"><i class="bi bi-eye-slash"></i></span>
+
+        <a href="{% url 'editHistory' history.id %}" class="pen-icon allCons" title="edit the history"><i class="bi bi-pencil"></i></a>
+        {# RE-ADDED: Pen icon for Disapproved #}
+
+        </div>
+                    </div>
+                    </li>
+        {% elif history.status == "Approved" %}
+            <span class="status allCons" style="background-color: #78FFA0; border-color: green; padding: 0.5em 2.6em 0.5em 2.6em">{{ history.status }}</span>
+
+        <form method="post" action="{% url 'deleteHistory' history.id %}" style="display:inline;">
+            {% csrf_token %}
+            <span class="bin-icon allCons" title="Delete the history"><button type="submit" style="border: none; background: none; cursor: pointer;"><i class="bi bi-trash" style="color:red;"></i></button></span>
+        </form>
+
+        <span class="eye-icon allCons" style="color: blue;" title="view the history"><i class="bi bi-eye"></i></span>
+
+        {# REMOVED: Edit icon hidden for Approved (No change here) #}
+
+        </div></div> </li>
+        {% else %}
+        <span class="status allCons" style="padding: 0.5em 3em 0.5em 3em">{{ history.status }}</span>
+
+        <form method="post" action="{% url 'deleteHistory' history.id %}" style="display:inline;">
+            {% csrf_token %}
+            <span class="bin-icon allCons" title="Delete the history"><button type="submit" style="border: none; background: none; cursor: pointer;"><i class="bi bi-trash" style="color:red;"></i></button></span>
+        </form>
+
+        <span class="eye-icon allCons" style="color: blue;" title="view the history"><i class="bi bi-eye-slash"></i></span>
+
+        <a href="{% url 'editHistory' history.id %}" class="pen-icon allCons" title="edit the history"><i class="bi bi-pencil"></i></a>
+        {# RE-ADDED: Pen icon for Pending #}
+
+        </div>
+</div>
+</li>
+        {% endif %}
+    {% endfor %}
+</ol>
+ {% else %}
+    <p style="margin-top: 5em; text-align: center;">You have not added any histories yet.</p>
+ {% endif %}
+            </div>
+
+        </div>
+
+            <div id="" class="divs">
+            <h2>Your Quiz Scores</h2>
+            <div class="inner">
+{% if user_scores %}
+    {% for score in user_scores reversed %}
+        <div class="favorite-item">
+
+                <div class="entryBar" style="margin-bottom:-0.8em;">
+                    <p>
+                        you got: {{score.score}}/{{score.max_score}}
+                        {% if forloop.first %}
+                        <span style="color: green; font-weight: bold; margin-left: 10px;">(This is your latest score)</span>
+                        {% endif %}
+
+                </p></div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p style="margin-top: 5em; text-align: center;">You haven't taken any quizzes yet.</p>
+{% endif %}
+            </div>
+
+        </div>
+
+            <div id="" class="divs">
+            <h2>Your favorites</h2>
+            <div class="inner">
+{% if favorites %}
+    {% for entry in favorites reversed %}
+                <a href="{% url 'entry' %}?q={{ entry.isizulu }}" class="isizulu-link">
+        <div class="favorite-item" title="press to view">
+
+                <div class="entryBar" style="margin-bottom:-0.8em;"><p>{{entry.isizulu}}</p></div>
+
+
+            <form method="POST" action="{% url 'like_entry' entry.id %}" class="unlike-form">
+                {% csrf_token %}
+                <button type="submit" title="Remove from Favorites">❤️</button>
+            </form>
+        </div>
+                     </a>
+    {% endfor %}
+{% else %}
+    <p style="margin-top: 5em; text-align: center;">You haven't added any entries to your favorites yet.</p>
+{% endif %}
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+</body>
+</html>

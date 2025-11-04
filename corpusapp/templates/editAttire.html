@@ -1,0 +1,122 @@
+{% extends 'home.html' %}
+{% load static %}
+
+{% block title %} cuisine {% endblock title %}
+{% block style %}
+<style>
+
+    #hr{
+    border-bottom: 3px solid black;
+    }
+
+    label{
+    color: black;
+    font-size: 2em;
+    }
+    #attireForm{
+    background-color: lightgray;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    margin: auto;
+    }
+    #extractForAttire{
+    width: 100%;
+        border-radius: 0.5em;
+        height: 2.5em;
+  
+    }#imageForAttire{
+    margin-top: 10px;
+    background-color: grey;
+    color: white;
+    font-size: 1.2em;
+      
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+     }
+    #imageForAttire:hover{
+    background-color: black;
+    }
+    #fileForAttire{
+    margin-top: 10px;
+    background-color: grey;
+    color: white;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    }
+    #fileForAttire:hover{
+    background-color: black;
+    }
+    .button{
+    background-color: grey;
+    color: white;
+    font-size: 1.5em;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    }
+    .button:hover{
+    background-color: black;
+    }
+    #attireForm input{
+         width: 100%;
+        border-radius: 0.5em;
+        height: 2.5em;
+    }
+    
+</style>
+
+
+{% endblock style %}
+
+{% block theCore %}
+<div id="hr">
+    <h2 style="color: black">Edit Traditional Attire</h2>
+</div>
+
+<div>
+    <form id="attireForm" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="headingForAttire" >Heading: </label>
+        <input type="text" id="headingForAttire" name="headingForAttire" value="{{attire.heading}}" required><br><br>
+
+        <label for="extractForAttire" >Small Extract: </label>
+        <textarea id="extractForAttire" name="extractForAttire" required>{{attire.extract}}</textarea>
+
+        <label for="imageForAttire">Picture:</label>
+        <input type="file" id="imageForAttire" name="imageForAttire" accept="image/*" value="{{attire.picture}}" required><br><br>
+
+        <label for="learnMore">Learn More:</label>
+        <input type="url" id="learnMore" name="learnMore" value="{{attire.learnMore}}"> <p style="display: inline-block;">or</p> <input type="file" name="fileForAttire" id="fileForAttire" accept=".txt, text/plain, .pdf, application/pdf" value="{{attire.file}}"> <br><br>
+
+        <button type="submit" class="button">UPDATE</button>
+    </form>
+</div>
+
+{% endblock theCore %}
+
+{% block script %}
+<script src="{% static 'script.js' %}">
+  const form = document.getElementById('cuisineForm');
+  const learnMore = document.getElementById('learnMore');
+  const file = document.getElementById('fileForCuisine');
+
+  form.addEventListener('submit', function(event) {
+    if (learnMore.value && file.files.length > 0) {
+      alert("Please provide either text OR a file, not both.");
+      event.preventDefault();
+    } else if (!learnMore.value && file.files.length === 0) {
+      alert("Please provide either text OR a file.");
+      event.preventDefault();
+    }
+  });
+</script>
+{% endblock script %}

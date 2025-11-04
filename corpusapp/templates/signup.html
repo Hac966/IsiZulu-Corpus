@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+  <style>
+    body{
+      display: flex;
+      justify-content: center;
+      }
+
+    div{
+      border-radius: 0.5em;
+      width: 50%;
+      padding: 2em;
+      display: inline-block;
+      margin: auto;
+
+      background-color: #99D9EA;
+      box-shadow: 2px 2px 5px grey;
+      position: relative;
+
+    }
+
+
+    h1{
+      color: blue;
+      text-align: center;
+    }
+
+    input{
+      position: absolute;
+      right: 2%;
+      width: 60%;
+    }
+
+    button{
+        position: absolute;
+        width: 20%;
+        left: 40%;
+    }
+
+
+
+  </style>
+</head>
+<body>
+<div>
+  <h1 style="">SIGNUP</h1>
+
+{% if messages %}
+  <ul class="messages" style="list-style-type: none; padding: 0;">
+    {% for message in messages %}
+      <li style="color: red; text-align: center;">{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+<form method="post">
+  {% csrf_token %}
+    <label for="username">Username:</label>
+    <input id="username" type="text" name="username" required>
+    <p style="color: red;">{{ form.username.errors }}</p>
+
+    <label for="email">Email:</label>
+    <input id="email" type="email" name="email" required>
+    <p style="color: red;">{{ form.email.errors }}</p>
+
+    <label for="password">Password:</label>
+    <input id="password" type="password" name="password1" required>
+    <p style="color: red;">{{ form.password1.errors }}</p>
+
+    <label for="password2">Confirm Password:</label>
+    <input id="password2" type="password" name="password2" required>
+    <p style="color: red;">{{ form.password2.errors }}</p>
+
+    <button id="sy" type="submit">Submit</button>
+</form>
+
+
+
+</div>
+
+
+<script>
+
+  let password = document.getElementById("password");
+
+  password.onclick = function(){
+      password.style.border = "none";
+  };
+</script>
+</body>
+</html>

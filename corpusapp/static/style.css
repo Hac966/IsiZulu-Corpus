@@ -1,0 +1,512 @@
+{% static %}
+body{
+    min-height: 100vh;
+    padding: 2em 1em 0.5em 1em;
+    font-family: 'Inter' , sans-serif;
+    color: #f3f4f6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    }
+
+::-webkit-scrollbar{
+    display: none;
+    }
+/*BLOCK: a div for the top portion*/
+#header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: -3.8rem;
+    text-align: center;
+    flex-direction: column;
+    }
+            /*styling the heading*/
+            h1{
+                display: flex;
+               color: black;
+               font-size: 34px;
+               justify-content: center;
+               width: 80%;
+               flex-grow: 1;
+               font-weight: 800;
+               }
+
+
+
+            /*the slogan of the corpus*/
+            #slogan{
+                margin-top: -0.7em;
+                font-size: 14px;
+                }
+
+            /*MINI-BLOCK: search folder or div container*/
+            #search-folder{
+                display: flex;
+                flex-direction: row;
+                margin-top: 1em;
+                height: 3em;
+                }
+
+
+                    /**/
+                    #search-bar:focus {
+                        outline: none;
+
+                        }
+
+                    /**/
+                    #search-bar {
+                        height: 3em;
+                        width: 79%;
+                        flex-grow: 1;
+                        padding: 0.3rem;
+                        border-top-left-radius: 0.5rem;
+                        border-bottom-left-radius: 0.5rem;
+
+                        border: 1px solid #374151;
+                        color: black;
+                        outline: none;
+                        transition: all 0.2s;
+                        }
+
+                    /**/
+                    #search-button {
+                        height: 3.3em;
+                        width: 3em;
+
+                        border: none;
+                        padding: 1.rem;
+                        background-color: black;
+                        color: white;
+                        border-top-right-radius: 0.5rem;
+                        border-bottom-right-radius: 0.5rem;
+                        height: 3.8em;
+                        transition: background-color 0.3s;
+                    }
+
+                    /**/
+                    #search-button:hover {
+                        background-color: #454545;
+                    }
+            /*END-BLOCK for search folder---------------*/
+
+            /*MINI-BLOCK: our menu button with three lines it*/
+            .menu-button{
+                cursor: pointer;
+                background-color: #1f2937;
+                color: #d1d5db;
+                border: 1px solid #374151;
+                width: 4em;
+                height: 3em;
+                padding: 0.5rem 1rem;
+                margin: 0 2em 0 0;
+                border-radius: 0.5rem;
+
+
+                }
+
+            .menu-button: hover{
+                background-color: white;
+                cursor: pointer;
+                }
+
+                            /*The dropMenu when the menu button is pressed*/
+                            #dropdown-menu{
+                                position: absolute;
+                                z-index: 10;
+                                background-color: black;
+                                border: 1px solid #374151;
+                                border-radius: 0.5rem;
+                                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                                width: 37%;
+                                margin-top: 0.5em;
+                                display: none;
+                            }
+
+                            /*Just a border fixer for quiz and add entry buttons*/
+                            #quiz{
+                                border-top-right-radius: 0.5rem;
+                                border-top-left-radius: 0.5rem;}
+
+                            #add-entry{
+                                border-bottom-right-radius: 0.5rem;
+                                border-bottom-left-radius: 0.5rem;}
+
+                            /*options for menu button*/
+                            .menu-options{
+                                display: flex;
+                                width: 100%;
+                                padding: 1rem 1rem;
+                                background: none;
+                                border: none;
+                                text-align: left;
+                                cursor: pointer;
+                                color: #d1d5db;
+                            }
+                            .menu-options:hover {
+                                background-color: #374151;
+                                }
+
+                            /*options for categories*/
+                            .categories-options{
+                                width: 100%;
+                                padding: 1rem 1rem;
+                                background: none;
+                                border: none;
+                                text-align: left;
+                                cursor: pointer;
+                                color: #d1d5db;}
+
+                                        /*a div When categories button press*/
+                                        #mini-container-for-categories{
+                                            position: absolute;
+                                            left: 100%;
+                                            top: 0;
+                                            background-color: black;
+                                            border: 1px solid #374151;
+                                            border-radius: 0.5rem;
+                                            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                                            width: 75%;
+                                           }
+
+                                        #mini-container-for-approvals{
+                                            position: absolute;
+                                            left: 100%;
+                                            top: 0;
+                                            background-color: black;
+                                            border: 1px solid #374151;
+                                            border-radius: 0.5rem;
+                                            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                                            width: 90%;
+                                            max-width: 15rem;
+                                           }
+
+
+
+                                        /*border edit for options in categories box*/
+                                        #ceremonies{
+                                            border-top-right-radius: 0.5rem;
+                                            border-top-left-radius: 0.5rem;
+                                            }
+                                        #attire{
+                                            border-bottom-right-radius: 0.5rem;
+                                            border-bottom-left-radius: 0.5rem;
+                                            }
+                                        .categories-options:hover {
+                                            background-color: #374151;
+                                        }
+/*END-BLOCK: a div for the top portion*/
+/*]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]*/
+
+/*BLOCK: the core is the main part at the center*/
+#the-core{
+    min-height: 9em;
+    margin-top: 1.8em;
+    border-radius: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    border-top: 2px solid black;
+    position: relative;
+
+    }
+
+
+
+/*THe adding of an entry*/
+.entry {
+     background-color: #121212; /* Darker gray background */
+     padding: 14px;
+     border-radius: 12px;
+     box-shadow: 0 4px 6px -1px #0000001A, 0 2px 4px -1px #0000000F;
+     border: 1px solid #4a5568;
+     display: flex;
+     overflow-wrap: break-word;
+     flex-direction: column;
+     margin-top: 0em;
+
+
+    }
+
+/*heading for the entry which is in Zulu*/
+
+
+/*The english translation*/
+.entry .english {
+    color: #e2e8f0;
+    font-style: italic;
+    margin-top: -0.45em;
+    }
+
+/*This is the extract and word usage , many other stats*/
+.entry .text-content {
+    color: #a0aec0;
+    margin-top: -0.45em;
+    }
+.entry .bottom-section {
+    position: relative;
+    border-top: 2px solid #4a5568;
+    padding-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 14px;
+    color: #a0aec0;
+    align-items: center;
+
+        }
+
+
+/**/
+.entry .tag {
+    background-color: #4a5568;
+    padding: 8px;
+    border-radius: 8px;
+    }
+
+/**/
+.entryButton {
+     padding: 8px;
+     display: flex;
+     align-items: center;
+     background-color: #d69e2e;
+     border-radius: 8px;
+     color: white;
+     font-weight: bold;
+     transition: background-color 0.3s ease;
+     cursor: pointer;
+     border: none;
+     }
+
+/**/
+.entryButton:hover {
+            background-color: #b7791f;
+        }
+
+/**/
+
+
+/**/
+button{
+    cursor: pointer;}
+
+
+
+
+
+
+
+/**/
+#menu-all{
+    position: relative;
+    }
+
+/**/
+#all{
+    max-width: 56rem;
+    width: 100%;
+ }
+
+
+
+/**/
+#ct-all{
+    position: relative;
+}
+
+#ct-all2{
+    position: relative;
+}
+
+
+
+
+
+
+/**/
+p{
+    color: #6b7280;
+    }
+
+
+
+
+
+
+/**/
+#welcome{
+    text-align: center;
+    padding-top: 48px;
+    padding-bottom: 48px;}
+
+
+/**/
+
+
+/**/
+#menu-options{
+    display: none;}
+
+/**/
+#anime1{
+    display: inline-block;
+    transition: transform 0.2s ease;
+    }
+
+#anime2{
+    display: inline-block;
+    transition: transform 0.2s ease;
+    }
+
+
+
+
+
+/* __________________________________________________________________________________________________________________ */
+/* __________________________________________________________________________________________________________________ */
+
+/* For adding an entry here is the css code for it */
+#adding-entry{
+    background-color: #1F2937;
+    padding: 2em 2em 2em 2em;
+    border-radius: 0.75rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid #4a5568;
+    box-sizing: border-box;}
+
+/**/
+#adding-entry h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #63b3ed;
+    margin-bottom: 1rem;
+    }
+
+/**/
+#form-for-entry label {
+    display: block;
+    min-width: 43em;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #9ca3af;
+    margin-bottom: 0.25rem;
+    }
+
+/**/
+#form-core{
+    padding: 0em 1em 0em 0em;
+    min-width: 12em;}
+
+/**/
+#form-for-entry input, #form-for-entry textarea {
+    min-width: 100%;
+    max-width: 59rem;
+    min-height: 2em;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: #374151;
+    border: 1px solid #4b5563;
+    color: #e5e7eb;
+    transition: all 0.2s;
+    outline: none;
+}
+
+/**/
+#form-for-entry input:focus, #form-for-entry textarea:focus {
+    box-shadow: 0 0 0 2px yellow;
+}
+
+#form-for-entry textarea{
+    max-width: 100%;
+    }
+/**/
+#entry-submit-button {
+    width: 103%;
+    padding: 1rem;
+    background-color: #16a34a;
+    color: white;
+    border-radius: 0.5rem;
+    font-weight: bold;
+
+
+}
+
+/**/
+#entry-submit-button:hover {
+    background-color: #15803d;}
+
+/**/
+#search-bar::placeholder{
+    color: black;
+}
+
+
+
+/**/
+.hidden{
+    display: none;}
+
+/* -------------------------------------------------------------*/
+/* catergories view */
+
+.a{
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #ca8a04;
+    color: white;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    text-decoration: none;
+
+}
+
+.a:hover {
+    background-color: #a16207;
+}
+
+.category-view > div > div > div > div {
+    padding: 1.2em}
+
+h2{
+    display: inline-block;}
+
+.add-category{
+    display: flex;
+    justify-content: flex-end;
+    height: 2em;
+    z-index: 5;
+    margin-top: -3.7em;
+
+    }
+
+.add-category-button{
+    width: 3em;
+    height: 2.6em;
+    background-color: orange;
+    border: none;
+    border-radius: 5px;
+    margin-right: 0.4em;
+    }
+.notification {
+    position: fixed;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 1px 25px;
+    border-radius: 3em;
+    font-family: sans-serif;
+    text-align: center;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: 2px solid blue;
+    transition: top 2s ease-in-out;
+    }
+
+a{
+    text-decoration: none;
+}
+

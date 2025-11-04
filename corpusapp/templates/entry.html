@@ -1,0 +1,250 @@
+{% extends 'home.html' %}
+{% load static %}
+
+{% block title %} search_entry {% endblock title %}
+{% block style %}
+<style>
+    .speak-button{
+        width: 2em;
+        height: 2em;
+        position: absolute;
+        top: 1em;
+        right: 1em;
+        border-radius: 100%;
+        border: none;
+        color: black;
+        background-color: white;
+        }
+
+    .like-form button {
+        position: absolute;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.5em;
+        color: red;
+        top: 0.3em;
+        right: 1.5em;
+    }
+
+    #search-results{
+        position: relative;
+    }
+
+    .entryHeading {
+    font-size: 24px;
+    font-weight: 600;
+    color: white;
+    overflow-wrap: break-word;
+
+    }
+
+    .entryStatsButton{
+        height: 2.5em;
+        width: 2.5em;
+        border-radius: 100%;
+        position: absolute;
+        right: 0;
+        border: none;
+        color: black;
+        background-color: white;
+    }
+
+    .entryStats{
+        border-top: 2px solid #4a5568;
+
+    }
+    .tag.translatable {
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+        display: inline-block;
+        position: relative;
+        z-index: 10;
+    }
+
+    .tag.translatable:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+</style>
+{% endblock style %}
+
+{% block theCore %}
+
+{% if entries %}
+    {% for entry in entries %}
+        {# 🚨 CRITICAL: Data attributes for original English/Extract for translation toggle 🚨 #}
+        <div id="search-results" class="entry"
+             data-original-english="{{ entry.english|default:''|escapejs }}"
+             data-original-extract="{{ entry.extract|default:''|escapejs }}">
+
+            <h1 class="entryHeading">{{entry.isizulu}} </h1>
+            <div style="display: flex; align-items: center; justify-content: space-between; overflow-wrap: break-word;">
+                <div style="display: flex; align-items: center; overflow-wrap: break-word;">
+                    {# ... (Like button form remains here) ... #}
+                    {% if request.user.is_authenticated %}
+                    <form method="POST" action="{% url 'like_entry' entry.id %}" class="like-form">
+                        {% csrf_token %}
+                        {% if request.user in entry.likes.all %}
+                            <button  type="submit" title="Remove from Favorites">💙</button>
+                        {% else %}
+                            <button type="submit" title="Add to Favorites">🤍</button>
+                        {% endif %}
+                    </form>
+                    {% endif %}
+                    </div>
+                <button class="speak-button" onclick="speak('{{ entry.isizulu}}')"><i class="bi bi-volume-up"></i></button>
+            </div>
+
+            {# Translation targets #}
+            <p class="english entry-translation" data-lang="en">"{{entry.english}}"</p>
+            <p class="text-content entry-extract" data-lang="en"><strong>Extract:</strong> {{entry.extract}}</p>
+
+            <div class="bottom-section">
+
+                {# 🚨 Click handlers for API translation 🚨 #}
+                <span class="tag translatable"
+                      onclick="translateEntryAPI(this, 'IsiXhosa', 'xhosa')">
+                    IsiXhosa: {{entry.isixhosa}}
+                </span>
+
+                <span class="tag translatable"
+                      onclick="translateEntryAPI(this, 'Isipedi', 'pedi')">
+                    Isipedi: {{entry.isipedi}}
+                </span>
+
+                <a href="{{entry.learn_more}}" ><button id="button" class="entryButton">
+                    Learn more
+                </button></a>
+                <button class="entryStatsButton">v</button>
+
+            </div> <br>
+            <div class="entryStats hidden">
+                <h3>Entry Stats:</h3>
+                {# User-input fields #}
+                <p class="text-content"><strong>Word usage:</strong> {{entry.word_usage}}</p>
+                <p class="text-content"><strong>Commonly paired:</strong> {{ entry.commonly}}</p>
+
+                <p class="text-content"><strong>Searched times:</strong> {{entry.word_frequency}}</p>
+
+         {% if entry.db_word_frequencies %}
+                    <p class="text-content"><strong> Word Frequencies:</strong></p>
+                    <ul>
+                        {% for word, count in entry.db_word_frequencies %}
+                            <li><strong>{{ word }}</strong> ({{ count }})</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+        </div>
+    {% endfor %}
+{% else %}
+    <div style="padding: 20px; border: 1px solid #ccc; background-color: #f8f8f8; border-radius: 0.5em;">
+        <p>Sorry, "{{ searched|default:'your query' }}"is not currently in our database.</p>
+        <p>Please check your spelling or try a different word.</p>
+    </div>
+{% endif %}
+
+{% endblock theCore %}
+
+{% block script %}
+<script src="{% static 'script.js' %}"></script>
+<script>
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function speak(textToSpeak){
+    if (textToSpeak && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+        const audio = new SpeechSynthesisUtterance(textToSpeak);
+        audio.lang = 'zu-ZA';
+        window.speechSynthesis.speak(audio);
+    } else {
+        console.error("Speech synthesis not available or text is empty.");
+    }
+}
+
+let viewStatsButtons = document.querySelectorAll(".entryStatsButton");
+
+viewStatsButtons.forEach(button => {
+    button.addEventListener('click', function() {
+        const entryDiv = this.closest('.entry');
+        const entryStats = entryDiv.querySelector('.entryStats');
+
+        if (entryStats) {
+            entryStats.classList.toggle('hidden');
+
+            this.textContent = entryStats.classList.contains('hidden') ? 'v' : '^';
+        }
+    });
+});
+
+async function translateEntryAPI(element, langName, langCode) {
+    const entryDiv = element.closest('.entry');
+    const englishEl = entryDiv.querySelector('.entry-translation');
+    const extractEl = entryDiv.querySelector('.entry-extract');
+    const originalEnglish = entryDiv.getAttribute('data-original-english');
+    const originalExtract = entryDiv.getAttribute('data-original-extract');
+    const currentLang = englishEl.getAttribute('data-lang');
+
+    if (currentLang === langCode) {
+        englishEl.innerHTML = `"${originalEnglish}"`;
+        englishEl.setAttribute('data-lang', 'en');
+        extractEl.innerHTML = `<strong>Extract:</strong> ${originalExtract}`;
+        element.style.fontWeight = 'normal';
+        return;
+    }
+
+    englishEl.innerHTML = `"${langName} translation loading..."`;
+    extractEl.innerHTML = `<strong>Extract:</strong> ${langName} translation loading...`;
+
+    async function fetchTranslation(text, targetLang) {
+        const response = await fetch('{% url "api_translate" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                text: text,
+                target_lang: targetLang
+            })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+             throw new Error(data.error || "API call failed");
+        }
+        return data.translation;
+    }
+
+    try {
+        const translatedEnglish = await fetchTranslation(originalEnglish, langName);
+        const translatedExtract = await fetchTranslation(originalExtract, langName);
+        englishEl.innerHTML = `"${translatedEnglish}"`;
+        extractEl.innerHTML = `<strong>Extract:</strong> ${translatedExtract}`;
+        englishEl.setAttribute('data-lang', langCode);
+        entryDiv.querySelectorAll('.tag.translatable').forEach(tag => tag.style.fontWeight = 'normal');
+        element.style.fontWeight = 'bold';
+
+    } catch (error) {
+        console.error('Translation Error:', error);
+        englishEl.innerHTML = `"${originalEnglish} (Translation Failed)"`;
+        extractEl.innerHTML = `<strong>Extract:</strong> ${originalExtract} (Translation Failed)`;
+    }
+}
+</script>
+{% endblock script %}
